@@ -12,8 +12,9 @@ namespace FirstRepositoryProject
         {
             int a = 10;
             int b = 20;
+            int c = a + b - 3 * a;
 
-            Console.WriteLine(a + b);
+            Console.WriteLine(a + b * c);
         }
     }
 }
