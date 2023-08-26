@@ -52,11 +52,16 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            for (int i = 0; i < input.Length; i++)
+            if (EndsWithReverseSolidus(input))
+            {
+                return true;
+            }
+
+            for (int i = 1; i < input.Length - 1; i++)
             {
                 if (input[i] == '\\')
                 {
-                    if (i + 1 == input.Length - 1 || !IsValidEscapeSequence(input[i + 1], input, i + 1))
+                    if (!IsValidEscapeSequence(input[i + 1], input, i + 1))
                     {
                         return true;
                     }
@@ -68,79 +73,60 @@ namespace Json
             return false;
         }
 
+        static bool EndsWithReverseSolidus(string input)
+        {
+            const int excludeEndingQuotes = 2;
+
+            return input[input.Length - excludeEndingQuotes] == '\\';
+        }
+
         static bool IsValidEscapeSequence(char c, string input, int position)
         {
-            return CheckFirstSetOfValidEscapeSequences(c) || CheckSecondSetOfValidEscapeSequences(c) || CheckThirdSetOfValidEscapeSequences(c, input, position);
+            char[] charactersForValidEscapeSequences = { '\\', '\"', 'n', 't', 'r', '0', 'a', 'b', 'f', 'v', '\'', '/' };
+
+            if (CheckForUnicodeAndHexadecimalEscapeSequences(c, input, position))
+            {
+                return true;
+            }
+
+            foreach (char character in charactersForValidEscapeSequences)
+            {
+                if (character == c)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        static bool CheckFirstSetOfValidEscapeSequences(char c)
-        {
-            return c == '\\' || c == '\"' || c == 'n';
-        }
-
-        static bool CheckSecondSetOfValidEscapeSequences(char c)
-        {
-            return c == 't' || c == 'r' || c == '0';
-        }
-
-        static bool CheckThirdSetOfValidEscapeSequences(char c, string input, int position)
-        {
-            return CheckFourthSetOfValidEscapeSequences(c, input, position) || CheckFifthSetOfValidEscapeSequences(c) || CheckSixthSetOfValidEscapeSequences(c);
-        }
-
-        static bool CheckFourthSetOfValidEscapeSequences(char c, string input, int position)
+        static bool CheckForUnicodeAndHexadecimalEscapeSequences(char c, string input, int position)
         {
             return CheckUnicodeEscapeSequenceFourDigits(c, input, position) || CheckUnicodeEscapeSequenceEightDigits(c, input, position) || CheckHexadecimalEscapeSequence(c, input, position);
-        }
-
-        static bool CheckFifthSetOfValidEscapeSequences(char c)
-        {
-            return c == 'a' || c == 'b' || c == 'f';
-        }
-
-        static bool CheckSixthSetOfValidEscapeSequences(char c)
-        {
-            return c == 'v' || c == '\'' || c == '/';
         }
 
         static bool CheckHexadecimalEscapeSequence(char c, string input, int position)
         {
             const int numberOfCharactersNeeded = 2;
+            const int excludeEndingQuotes = 2;
 
-            return c == 'x' && CheckHowManyFollowingCharacters(input, position) >= numberOfCharactersNeeded && CheckTheFollowingCharactersAreNotSpaces(input, position, numberOfCharactersNeeded);
+            return c == 'x' && input.Substring(position).Length - excludeEndingQuotes >= numberOfCharactersNeeded && !input.Substring(position, numberOfCharactersNeeded).Contains(' ');
         }
 
         static bool CheckUnicodeEscapeSequenceFourDigits(char c, string input, int position)
         {
             const int numberOfCharactersNeeded = 4;
+            const int excludeEndingQuotes = 2;
 
-            return c == 'u' && CheckHowManyFollowingCharacters(input, position) >= numberOfCharactersNeeded && CheckTheFollowingCharactersAreNotSpaces(input, position, numberOfCharactersNeeded);
+            return c == 'u' && input.Substring(position).Length - excludeEndingQuotes >= numberOfCharactersNeeded && !input.Substring(position, numberOfCharactersNeeded).Contains(' ');
         }
 
         static bool CheckUnicodeEscapeSequenceEightDigits(char c, string input, int position)
         {
             const int numberOfCharactersNeeded = 8;
+            const int excludeEndingQuotes = 2;
 
-            return c == 'U' && CheckHowManyFollowingCharacters(input, position) >= numberOfCharactersNeeded && CheckTheFollowingCharactersAreNotSpaces(input, position, numberOfCharactersNeeded);
-        }
-
-        static int CheckHowManyFollowingCharacters(string input, int position)
-        {
-            const int excludeLastDoubleQuotes = 2;
-
-            return input.Length - excludeLastDoubleQuotes - position;
-        }
-
-        static bool CheckTheFollowingCharactersAreNotSpaces(string input, int position, int numberOfCharactersNeeded)
-        {
-            try
-            {
-                return !input.Substring(position + 1, numberOfCharactersNeeded).Contains(' ');
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return false;
-            }
+            return c == 'U' && input.Substring(position).Length - excludeEndingQuotes >= numberOfCharactersNeeded && !input.Substring(position, numberOfCharactersNeeded).Contains(' ');
         }
     }
 }
