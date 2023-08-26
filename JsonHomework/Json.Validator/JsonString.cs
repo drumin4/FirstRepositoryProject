@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Json
@@ -102,31 +103,24 @@ namespace Json
 
         static bool CheckForUnicodeAndHexadecimalEscapeSequences(char c, string input, int position)
         {
-            return CheckUnicodeEscapeSequenceFourDigits(c, input, position) || CheckUnicodeEscapeSequenceEightDigits(c, input, position) || CheckHexadecimalEscapeSequence(c, input, position);
-        }
-
-        static bool CheckHexadecimalEscapeSequence(char c, string input, int position)
-        {
-            const int numberOfCharactersNeeded = 2;
             const int excludeEndingQuotes = 2;
 
-            return c == 'x' && input.Substring(position).Length - excludeEndingQuotes >= numberOfCharactersNeeded && !input.Substring(position, numberOfCharactersNeeded).Contains(' ');
-        }
-
-        static bool CheckUnicodeEscapeSequenceFourDigits(char c, string input, int position)
+            Dictionary<char, int> keyValuePairs = new Dictionary<char, int>
         {
-            const int numberOfCharactersNeeded = 4;
-            const int excludeEndingQuotes = 2;
+            { 'x', 2 },
+            { 'u', 4 },
+            { 'U', 8 }
+        };
 
-            return c == 'u' && input.Substring(position).Length - excludeEndingQuotes >= numberOfCharactersNeeded && !input.Substring(position, numberOfCharactersNeeded).Contains(' ');
-        }
+            foreach (char character in keyValuePairs.Keys)
+            {
+                if (character == c)
+                {
+                    return input.Substring(position).Length - excludeEndingQuotes >= keyValuePairs[character] && !input.Substring(position, keyValuePairs[character]).Contains(' ');
+                }
+            }
 
-        static bool CheckUnicodeEscapeSequenceEightDigits(char c, string input, int position)
-        {
-            const int numberOfCharactersNeeded = 8;
-            const int excludeEndingQuotes = 2;
-
-            return c == 'U' && input.Substring(position).Length - excludeEndingQuotes >= numberOfCharactersNeeded && !input.Substring(position, numberOfCharactersNeeded).Contains(' ');
+            return false;
         }
     }
 }
