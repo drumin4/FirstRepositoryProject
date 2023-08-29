@@ -22,7 +22,7 @@ namespace Json
 
             foreach (char c in input)
             {
-                if (IsNonPrintableCharacter(c) || c == deleteAsciiCharacter)
+                if (IsControlCharacter(c) || c == deleteAsciiCharacter)
                 {
                     return false;
                 }
@@ -31,7 +31,7 @@ namespace Json
             return true;
         }
 
-        private static bool IsNonPrintableCharacter(char c)
+        private static bool IsControlCharacter(char c)
         {
             return c < ' ';
         }
