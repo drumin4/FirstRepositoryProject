@@ -8,10 +8,10 @@ namespace Json
     {
         public static bool IsJsonString(string input)
         {
-            return CheckEachCharacter(input) && IsWrappedInDoubleQuotes(input) && !ContainsUnrecognizedEscapeCharacters(input);
+            return CheckForControlCharacter(input) && IsWrappedInDoubleQuotes(input) && !ContainsUnrecognizedEscapeCharacters(input);
         }
 
-        private static bool CheckEachCharacter(string input)
+        private static bool CheckForControlCharacter(string input)
         {
             const int deleteControlCharacter = 127;
 
