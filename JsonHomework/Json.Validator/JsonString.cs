@@ -83,9 +83,9 @@ namespace Json
 
         static bool IsValidEscapeSequence(char c, string input, int position)
         {
-            char[] charactersForValidEscapeSequences = { '\\', '\"', 'n', 't', 'r', '0', 'a', 'b', 'f', 'v', '\'', '/' };
+            char[] charactersForValidEscapeSequences = { '\\', '\"', 'n', 't', 'r', 'b', 'f', '\'', '/' };
 
-            if (CheckForUnicodeAndHexadecimalEscapeSequences(c, input, position))
+            if (CheckForUnicodeEscapeSequences(c, input, position))
             {
                 return true;
             }
@@ -101,26 +101,28 @@ namespace Json
             return false;
         }
 
-        static bool CheckForUnicodeAndHexadecimalEscapeSequences(char c, string input, int position)
+        static bool CheckForUnicodeEscapeSequences(char c, string input, int position)
         {
             const int excludeEndingQuotes = 2;
+            const int numberOfDigitsNeeded = 4;
 
-            Dictionary<char, int> keyValuePairs = new Dictionary<char, int>
-        {
-            { 'x', 2 },
-            { 'u', 4 },
-            { 'U', 8 }
-        };
-
-            foreach (char character in keyValuePairs.Keys)
+            if (c != 'u')
             {
-                if (character == c)
-                {
-                    return input.Substring(position).Length - excludeEndingQuotes >= keyValuePairs[character] && !input.Substring(position, keyValuePairs[character]).Contains(' ');
-                }
+                return false;
+            }
+            else if (input.Substring(position + 1).Length - excludeEndingQuotes < numberOfDigitsNeeded)
+            {
+                return false;
             }
 
-            return false;
+            return TryParseUnicodeEscapeSequence(input.Substring(position + 1, numberOfDigitsNeeded));
+        }
+
+        static bool TryParseUnicodeEscapeSequence(string input)
+        {
+            const int startIndex = 2;
+
+            return ushort.TryParse(input.Substring(startIndex), System.Globalization.NumberStyles.HexNumber, null, out ushort codePoint);
         }
     }
 }

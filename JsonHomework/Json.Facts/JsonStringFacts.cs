@@ -133,11 +133,9 @@ namespace Json.Facts
         }
 
         [Fact()]
-        public void DoesNotEndWithAnUnfinishedHexNumberOfEightDigits()
+        public void TextContainsOnlyOneQuote()
         {
-            Assert.False(IsJsonString(Quoted(@"a\U")));
-            Assert.False(IsJsonString(Quoted(@"a\U123")));
-            Assert.False(IsJsonString(Quoted(@"a\U1234567")));
+            Assert.True(IsJsonString(Quoted("\"")));
         }
 
         public static string Quoted(string text)
