@@ -13,7 +13,7 @@ namespace Json
 
         private static bool CheckEachCharacter(string input)
         {
-            const int deleteAsciiCharacter = 127;
+            const int deleteControlCharacter = 127;
 
             if (IsNullOrEmpty(input))
             {
@@ -22,7 +22,7 @@ namespace Json
 
             foreach (char c in input)
             {
-                if (IsControlCharacter(c) || c == deleteAsciiCharacter)
+                if (IsControlCharacter(c) || c == deleteControlCharacter)
                 {
                     return false;
                 }
