@@ -83,16 +83,16 @@ namespace Json
 
         static bool IsValidEscapeSequence(char c, string input, int position)
         {
-            char[] charactersForValidEscapeSequences = { '\\', '\"', 'n', 't', 'r', 'b', 'f', '\'', '/' };
+            const string charactersFromValidEscapeSequences = "\\\"ntrbf\'/";
 
             if (CheckForUnicodeEscapeSequences(c, input, position))
             {
                 return true;
             }
 
-            foreach (char character in charactersForValidEscapeSequences)
+            for (int i = 0; i < charactersFromValidEscapeSequences.Length; i++)
             {
-                if (character == c)
+                if (charactersFromValidEscapeSequences[i] == c)
                 {
                     return true;
                 }
