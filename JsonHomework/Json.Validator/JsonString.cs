@@ -73,10 +73,12 @@ namespace Json
                         return true;
                     }
 
-                    inputCopy = inputCopy[0] + inputCopy.Substring(removeTheFirstTwoCharacters);
+                    inputCopy = inputCopy[0] + inputCopy[removeTheFirstTwoCharacters..];
                 }
-
-                inputCopy = inputCopy[0] + inputCopy.Substring(removeTheFirstCharacter);
+                else
+                {
+                    inputCopy = inputCopy[0] + inputCopy[removeTheFirstCharacter..];
+                }
             }
 
             return false;
@@ -113,16 +115,18 @@ namespace Json
         {
             const int excludeEndingQuotes = 2;
             const int numberOfDigitsNeeded = 4;
+            int startingIndexOfUnicodeDigits = position + 1;
+            int endingIndexOfUnicodeDigits = position + 1 + numberOfDigitsNeeded;
 
-            if (c != 'u' || input.Substring(position + 1).Length - excludeEndingQuotes < numberOfDigitsNeeded)
+            if (c != 'u' || input[startingIndexOfUnicodeDigits..].Length - excludeEndingQuotes < numberOfDigitsNeeded)
             {
                 return false;
             }
 
-            return TryParseUnicodeEscapeSequence(input.Substring(position + 1, numberOfDigitsNeeded));
+            return VerifyUnicodeEscapeSequence(input[startingIndexOfUnicodeDigits..endingIndexOfUnicodeDigits]);
         }
 
-        static bool TryParseUnicodeEscapeSequence(string input)
+        static bool VerifyUnicodeEscapeSequence(string input)
         {
             string unicodeEscapeSequence = "\\u" + input;
             string unescaped = Regex.Unescape(unicodeEscapeSequence);
