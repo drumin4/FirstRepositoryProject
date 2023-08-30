@@ -114,11 +114,7 @@ namespace Json
             const int excludeEndingQuotes = 2;
             const int numberOfDigitsNeeded = 4;
 
-            if (c != 'u')
-            {
-                return false;
-            }
-            else if (input.Substring(position + 1).Length - excludeEndingQuotes < numberOfDigitsNeeded)
+            if (c != 'u' || input.Substring(position + 1).Length - excludeEndingQuotes < numberOfDigitsNeeded)
             {
                 return false;
             }
