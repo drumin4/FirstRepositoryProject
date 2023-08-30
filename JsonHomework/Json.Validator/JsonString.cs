@@ -120,9 +120,10 @@ namespace Json
 
         static bool TryParseUnicodeEscapeSequence(string input)
         {
-            const int startIndex = 2;
+            string unicodeEscapeSequence = "\\u" + input;
+            string unescaped = Regex.Unescape(unicodeEscapeSequence);
 
-            return ushort.TryParse(input.Substring(startIndex), System.Globalization.NumberStyles.HexNumber, null, out ushort codePoint);
+            return unicodeEscapeSequence != unescaped;
         }
     }
 }
