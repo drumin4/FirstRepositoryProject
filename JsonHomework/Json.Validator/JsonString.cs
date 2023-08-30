@@ -53,22 +53,30 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
+            string inputCopy = input;
+
             if (EndsWithReverseSolidus(input))
             {
                 return true;
             }
 
-            for (int i = 1; i < input.Length - 1; i++)
+            const int removeTheFirstTwoCharacters = 3;
+            const int removeTheFirstCharacter = 2;
+            const int charAfterReverseSolidusPosition = 2;
+
+            while (inputCopy.Length > 2)
             {
-                if (input[i] == '\\')
+                if (inputCopy[1] == '\\')
                 {
-                    if (!IsValidEscapeSequence(input[i + 1], input, i + 1))
+                    if (!IsValidEscapeSequence(inputCopy[charAfterReverseSolidusPosition], inputCopy, charAfterReverseSolidusPosition))
                     {
                         return true;
                     }
 
-                    i++;
+                    inputCopy = inputCopy[0] + inputCopy.Substring(removeTheFirstTwoCharacters);
                 }
+
+                inputCopy = inputCopy[0] + inputCopy.Substring(removeTheFirstCharacter);
             }
 
             return false;
