@@ -22,7 +22,7 @@ namespace Json
 
             foreach (char c in input)
             {
-                if (IsControlCharacter(c) || c == deleteControlCharacter)
+                if (IsControlCharacter(c) || deleteControlCharacter.Equals(c))
                 {
                     return false;
                 }
