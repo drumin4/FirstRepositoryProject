@@ -135,7 +135,7 @@ namespace Json.Facts
         [Fact()]
         public void TextContainsOnlyOneQuote()
         {
-            Assert.True(IsJsonString(Quoted("\"")));
+            Assert.False(IsJsonString("\""));
         }
 
         public static string Quoted(string text)

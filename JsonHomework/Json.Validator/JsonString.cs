@@ -43,7 +43,7 @@ namespace Json
                 return false;
             }
 
-            return input[0] == '"' && input[input.Length - 1] == '"';
+            return input[0] == '"' && input[input.Length - 1] == '"' && input.Length >= 2;
         }
 
         private static bool IsNullOrEmpty(string input)
