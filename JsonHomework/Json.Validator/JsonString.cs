@@ -43,7 +43,12 @@ namespace Json
                 return false;
             }
 
-            return input[0] == '"' && input[input.Length - 1] == '"' && input.Length >= 2;
+            if (input.Length < 2)
+            {
+                return false;
+            }
+
+            return input[0] == '"' && input[input.Length - 1] == '"';
         }
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
