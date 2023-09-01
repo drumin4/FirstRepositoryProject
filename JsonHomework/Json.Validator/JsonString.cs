@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Json
@@ -93,12 +94,7 @@ namespace Json
                 return true;
             }
 
-            if (charactersFromValidEscapeSequences.Contains(c))
-            {
-                return true;
-            }
-
-            return false;
+            return charactersFromValidEscapeSequences.Contains(c);
         }
 
         static bool CheckForUnicodeEscapeSequences(char c, string input, int position)
