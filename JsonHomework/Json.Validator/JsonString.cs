@@ -38,17 +38,12 @@ namespace Json
 
         private static bool IsWrappedInDoubleQuotes(string input)
         {
-            if (IsNullOrEmpty(input))
+            if (string.IsNullOrEmpty(input))
             {
                 return false;
             }
 
             return input[0] == '"' && input[input.Length - 1] == '"' && input.Length >= 2;
-        }
-
-        private static bool IsNullOrEmpty(string input)
-        {
-            return string.IsNullOrEmpty(input);
         }
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
