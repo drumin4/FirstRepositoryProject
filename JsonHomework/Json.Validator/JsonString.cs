@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Json
@@ -47,72 +48,90 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            string inputCopy = input;
-
             if (EndsWithReverseSolidus(input))
             {
                 return true;
             }
 
-            const int removeTheFirstTwoCharacters = 3;
-            const int removeTheFirstCharacter = 2;
-            const int charAfterReverseSolidusPosition = 2;
+            const int positionAfterEscapeSequence = 2;
+            string inputCopyWithoutQuotes = RemoveQuotes(input);
 
-            while (inputCopy.Length > 2)
+            while (inputCopyWithoutQuotes.Length > 0)
             {
-                if (inputCopy[1] == '\\')
+                if (inputCopyWithoutQuotes[0] == '\\' && !IsValidEscapeSequence(inputCopyWithoutQuotes))
                 {
-                    if (!IsValidEscapeSequence(inputCopy[charAfterReverseSolidusPosition], inputCopy, charAfterReverseSolidusPosition))
-                    {
-                        return true;
-                    }
+                    return true;
+                }
+                else if (inputCopyWithoutQuotes[0] == '\\' && IsValidEscapeSequence(inputCopyWithoutQuotes))
+                {
+                    inputCopyWithoutQuotes = inputCopyWithoutQuotes[positionAfterEscapeSequence..];
+                }
 
-                    inputCopy = inputCopy[0] + inputCopy[removeTheFirstTwoCharacters..];
-                }
-                else
-                {
-                    inputCopy = inputCopy[0] + inputCopy[removeTheFirstCharacter..];
-                }
+                inputCopyWithoutQuotes = inputCopyWithoutQuotes[1..];
             }
 
             return false;
         }
 
+        static string RemoveQuotes(string input)
+        {
+            int lastPosition = input.Length - 1;
+
+            if (input.Length < 2)
+            {
+                return input;
+            }
+
+            if (input[0] == '"' && input[lastPosition] == '"')
+            {
+                return input[1..lastPosition];
+            }
+
+            return input;
+        }
+
         static bool EndsWithReverseSolidus(string input)
         {
-            const int excludeEndingQuotes = 2;
-
-            return input[input.Length - excludeEndingQuotes] == '\\';
+            return input[input.Length - 1] == '\\';
         }
 
-        static bool IsValidEscapeSequence(char c, string input, int position)
+        static bool IsValidEscapeSequence(string input)
         {
             const string charactersFromValidEscapeSequences = "\\\"ntrbf\'/";
+            char characterAfterReverseSolidus = input[1];
 
-            return IsAUnicodeEscapeSequences(c, input, position) || charactersFromValidEscapeSequences.Contains(c);
+            return charactersFromValidEscapeSequences.Contains(characterAfterReverseSolidus) || IsAUnicodeEscapeSequence(input);
         }
 
-        static bool IsAUnicodeEscapeSequences(char c, string input, int position)
+        static bool IsAUnicodeEscapeSequence(string input)
         {
-            const int excludeEndingQuotes = 2;
-            const int numberOfDigitsNeeded = 4;
-            int startingIndexOfUnicodeDigits = position + 1;
-            int endingIndexOfUnicodeDigits = position + 1 + numberOfDigitsNeeded;
+            const int validUnicodeEscapeSequenceLength = 6;
 
-            if (c != 'u' || input[startingIndexOfUnicodeDigits..].Length - excludeEndingQuotes < numberOfDigitsNeeded)
+            if (!input.StartsWith("\\u") || input.Length != validUnicodeEscapeSequenceLength)
             {
                 return false;
             }
 
-            return VerifyUnicodeEscapeSequence(input[startingIndexOfUnicodeDigits..endingIndexOfUnicodeDigits]);
+            for (int i = 2; i < validUnicodeEscapeSequenceLength; i++)
+            {
+                char c = input[i];
+
+                if (!IsHexDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        static bool VerifyUnicodeEscapeSequence(string input)
+        static bool IsHexDigit(char c)
         {
-            string unicodeEscapeSequence = "\\u" + input;
-            string unescaped = Regex.Unescape(unicodeEscapeSequence);
+            const string validNumbers = "0123456789";
+            const string validUppercaseLetters = "ABCDEF";
+            const string validLowercaseLetters = "abcdef";
 
-            return unicodeEscapeSequence != unescaped;
+            return validNumbers.Contains(c) || validUppercaseLetters.Contains(c) || validLowercaseLetters.Contains(c);
         }
     }
 }
