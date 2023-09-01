@@ -89,15 +89,10 @@ namespace Json
         {
             const string charactersFromValidEscapeSequences = "\\\"ntrbf\'/";
 
-            if (CheckForUnicodeEscapeSequences(c, input, position))
-            {
-                return true;
-            }
-
-            return charactersFromValidEscapeSequences.Contains(c);
+            return IsAUnicodeEscapeSequences(c, input, position) || charactersFromValidEscapeSequences.Contains(c);
         }
 
-        static bool CheckForUnicodeEscapeSequences(char c, string input, int position)
+        static bool IsAUnicodeEscapeSequences(char c, string input, int position)
         {
             const int excludeEndingQuotes = 2;
             const int numberOfDigitsNeeded = 4;
