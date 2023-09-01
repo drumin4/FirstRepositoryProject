@@ -93,12 +93,9 @@ namespace Json
                 return true;
             }
 
-            for (int i = 0; i < charactersFromValidEscapeSequences.Length; i++)
+            if (charactersFromValidEscapeSequences.Contains(c))
             {
-                if (charactersFromValidEscapeSequences[i] == c)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
