@@ -8,17 +8,17 @@ namespace Json
     {
         public static bool IsJsonString(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             return CheckForControlCharacter(input) && IsWrappedInDoubleQuotes(input) && !ContainsUnrecognizedEscapeCharacters(input);
         }
 
         private static bool CheckForControlCharacter(string input)
         {
             const int deleteControlCharacter = 127;
-
-            if (IsNullOrEmpty(input))
-            {
-                return false;
-            }
 
             foreach (char c in input)
             {
@@ -38,11 +38,6 @@ namespace Json
 
         private static bool IsWrappedInDoubleQuotes(string input)
         {
-            if (string.IsNullOrEmpty(input))
-            {
-                return false;
-            }
-
             if (input.Length < 2)
             {
                 return false;
