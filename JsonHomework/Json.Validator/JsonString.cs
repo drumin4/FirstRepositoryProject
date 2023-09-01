@@ -18,11 +18,9 @@ namespace Json
 
         private static bool CheckForControlCharacter(string input)
         {
-            const int deleteControlCharacter = 127;
-
             foreach (char c in input)
             {
-                if (IsControlCharacter(c) || deleteControlCharacter.Equals(c))
+                if (IsControlCharacter(c))
                 {
                     return false;
                 }
