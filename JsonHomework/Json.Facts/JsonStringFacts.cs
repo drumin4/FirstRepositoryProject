@@ -141,7 +141,7 @@ namespace Json.Facts
         [Fact()]
         public void TextEndsWithReverseSolidusEscapeSequence()
         {
-            Assert.True(IsJsonString("ab\\"));
+            Assert.True(IsJsonString(Quoted("ab\\\\")));
         }
 
         public static string Quoted(string text)

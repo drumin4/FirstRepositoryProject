@@ -47,12 +47,13 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            if (EndsWithReverseSolidus(input))
+            string inputCopyWithoutQuotes = RemoveQuotes(input);
+            int penultimatePosition = inputCopyWithoutQuotes.Length - 2;
+
+            if (EndsWithReverseSolidus(inputCopyWithoutQuotes) && inputCopyWithoutQuotes[penultimatePosition] != '\\')
             {
                 return true;
             }
-
-            string inputCopyWithoutQuotes = RemoveQuotes(input);
 
             while (inputCopyWithoutQuotes.Length > 0)
             {
