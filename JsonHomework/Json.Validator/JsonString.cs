@@ -15,25 +15,22 @@ namespace Json
                 return false;
             }
 
-            return CheckForControlCharacter(input) && IsWrappedInDoubleQuotes(input) && !ContainsUnrecognizedEscapeCharacters(input);
+            return IsFreeOfControlCharacters(input) && IsWrappedInDoubleQuotes(input) && !ContainsUnrecognizedEscapeCharacters(input);
         }
 
-        private static bool CheckForControlCharacter(string input)
+        private static bool IsFreeOfControlCharacters(string input)
         {
+            const string controlCharacters = "\n\r\t\f\b";
+
             foreach (char c in input)
             {
-                if (IsControlCharacter(c))
+                if (controlCharacters.Contains(c))
                 {
                     return false;
                 }
             }
 
             return true;
-        }
-
-        private static bool IsControlCharacter(char c)
-        {
-            return c < ' ';
         }
 
         private static bool IsWrappedInDoubleQuotes(string input)
@@ -97,7 +94,7 @@ namespace Json
 
         static bool IsValidEscapeSequence(string input)
         {
-            const string charactersFromValidEscapeSequences = "\\\"ntrbf\'/";
+            const string charactersFromValidEscapeSequences = "\\\"\'/";
             char characterAfterReverseSolidus = input[1];
 
             return charactersFromValidEscapeSequences.Contains(characterAfterReverseSolidus) || IsAUnicodeEscapeSequence(input);
