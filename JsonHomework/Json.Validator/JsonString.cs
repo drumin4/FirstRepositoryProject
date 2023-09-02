@@ -8,6 +8,8 @@ namespace Json
 {
     public static class JsonString
     {
+        private static string charactersFromValidEscapeSequences = "\\\"ntrbf";
+
         public static bool IsJsonString(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -50,7 +52,6 @@ namespace Json
                 return true;
             }
 
-            const int positionAfterEscapeSequence = 2;
             string inputCopyWithoutQuotes = RemoveQuotes(input);
 
             while (inputCopyWithoutQuotes.Length > 0)
@@ -61,13 +62,23 @@ namespace Json
                 }
                 else if (inputCopyWithoutQuotes[0] == '\\' && IsValidEscapeSequence(inputCopyWithoutQuotes))
                 {
-                    inputCopyWithoutQuotes = inputCopyWithoutQuotes[positionAfterEscapeSequence..];
+                    inputCopyWithoutQuotes = RemoveFormerEscapeSequence(inputCopyWithoutQuotes);
                 }
-
-                inputCopyWithoutQuotes = inputCopyWithoutQuotes[1..];
+                else
+                {
+                    inputCopyWithoutQuotes = inputCopyWithoutQuotes[1..];
+                }
             }
 
             return false;
+        }
+
+        static string RemoveFormerEscapeSequence(string input)
+        {
+            const int escapeSequenceLength = 2;
+            const int unicodeEscapeSequenceLength = 6;
+
+            return charactersFromValidEscapeSequences.Contains(input[1]) ? input[escapeSequenceLength..] : input[unicodeEscapeSequenceLength..];
         }
 
         static string RemoveQuotes(string input)
@@ -94,7 +105,6 @@ namespace Json
 
         static bool IsValidEscapeSequence(string input)
         {
-            const string charactersFromValidEscapeSequences = "\\\"\'/";
             char characterAfterReverseSolidus = input[1];
 
             return charactersFromValidEscapeSequences.Contains(characterAfterReverseSolidus) || IsAUnicodeEscapeSequence(input);
@@ -104,7 +114,7 @@ namespace Json
         {
             const int validUnicodeEscapeSequenceLength = 6;
 
-            if (!input.StartsWith("\\u") || input.Length != validUnicodeEscapeSequenceLength)
+            if (!input.StartsWith("\\u") || input.Length < validUnicodeEscapeSequenceLength)
             {
                 return false;
             }
