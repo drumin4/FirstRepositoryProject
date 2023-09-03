@@ -114,6 +114,12 @@ namespace Json.Facts
         }
 
         [Fact()]
+        public void CanContainAnEscapedReverseSolidus()
+        {
+            Assert.True(IsJsonString(Quoted(@"ab\\")));
+        }
+
+        [Fact()]
         public void DoesNotContainUnrecognizedEscapeCharacters()
         {
             Assert.False(IsJsonString(Quoted(@"a\x")));
@@ -133,15 +139,15 @@ namespace Json.Facts
         }
 
         [Fact()]
-        public void TextContainsOnlyOneQuote()
+        public void DoesNotContainOnlyAnUnescapedQuote()
         {
             Assert.False(IsJsonString("\""));
         }
 
         [Fact()]
-        public void TextEndsWithReverseSolidusEscapeSequence()
+        public void DoesNotContainOnlyAnUnescapedReverseSolidus()
         {
-            Assert.True(IsJsonString(Quoted("ab\\\\")));
+            Assert.True(IsJsonString(Quoted(@"\")));
         }
 
         public static string Quoted(string text)

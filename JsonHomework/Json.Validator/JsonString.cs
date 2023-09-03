@@ -48,9 +48,8 @@ namespace Json
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
             string inputCopyWithoutQuotes = RemoveQuotes(input);
-            int penultimatePosition = inputCopyWithoutQuotes.Length - 2;
 
-            if (EndsWithReverseSolidus(inputCopyWithoutQuotes) && inputCopyWithoutQuotes[penultimatePosition] != '\\')
+            if (EndsWithAnUnescapedReverseSolidus(inputCopyWithoutQuotes))
             {
                 return true;
             }
@@ -99,9 +98,11 @@ namespace Json
             return input;
         }
 
-        static bool EndsWithReverseSolidus(string input)
+        static bool EndsWithAnUnescapedReverseSolidus(string input)
         {
-            return input[input.Length - 1] == '\\';
+            int penultimatePosition = input.Length - 2;
+
+            return input[input.Length - 1] == '\\' && input[penultimatePosition] != '\\';
         }
 
         static bool IsValidEscapeSequence(string input)
