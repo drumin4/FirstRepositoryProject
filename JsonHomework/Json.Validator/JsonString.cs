@@ -8,7 +8,7 @@ namespace Json
 {
     public static class JsonString
     {
-        private static string charactersFromValidEscapeSequences = "\\\"ntrbf";
+        private static string charactersFromValidEscapeSequences = "\\\"ntrbf/";
 
         public static bool IsJsonString(string input)
         {
