@@ -76,7 +76,7 @@ namespace Json
                 }
                 else
                 {
-                    inputCopyWithoutQuotes = inputCopyWithoutQuotes[1..];
+                    inputCopyWithoutQuotes = RemoveCurrentCharacterFromString(inputCopyWithoutQuotes);
                 }
             }
 
@@ -88,7 +88,12 @@ namespace Json
             const int escapeSequenceLength = 2;
             const int unicodeEscapeSequenceLength = 6;
 
-            return charactersFromValidEscapeSequences.Contains(input[1]) ? input[escapeSequenceLength..] : input[unicodeEscapeSequenceLength..];
+            return escapableCharacters.Contains(input[1]) ? input[escapeSequenceLength..] : input[unicodeEscapeSequenceLength..];
+        }
+
+        static string RemoveCurrentCharacterFromString(string input)
+        {
+            return input[1..];
         }
 
         static string RemoveQuotes(string input)
