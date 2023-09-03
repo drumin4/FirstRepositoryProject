@@ -8,7 +8,7 @@ namespace Json
 {
     public static class JsonString
     {
-        private static string charactersFromValidEscapeSequences = "\\\"ntrbf/";
+        private static string escapableCharacters = "\\\"ntrbf/";
 
         public static bool IsJsonString(string input)
         {
@@ -66,11 +66,11 @@ namespace Json
 
             while (inputCopyWithoutQuotes.Length > 0)
             {
-                if (inputCopyWithoutQuotes[0] == '\\' && !IsCurrentEscapeSequenceValid(inputCopyWithoutQuotes))
+                if (inputCopyWithoutQuotes[0] == '\\' && !CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
                 {
                     return true;
                 }
-                else if (inputCopyWithoutQuotes[0] == '\\' && IsCurrentEscapeSequenceValid(inputCopyWithoutQuotes))
+                else if (inputCopyWithoutQuotes[0] == '\\' && CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
                 {
                     inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
                 }
@@ -121,11 +121,11 @@ namespace Json
             return lastCharacter == '\\' && penultimateCharacter != '\\';
         }
 
-        static bool IsCurrentEscapeSequenceValid(string input)
+        static bool CurrentEscapeSequenceIsValid(string input)
         {
             char characterAfterReverseSolidus = input[1];
 
-            return charactersFromValidEscapeSequences.Contains(characterAfterReverseSolidus) || IsAUnicodeEscapeSequence(input);
+            return escapableCharacters.Contains(characterAfterReverseSolidus) || IsAUnicodeEscapeSequence(input);
         }
 
         static bool IsAUnicodeEscapeSequence(string input)
