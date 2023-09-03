@@ -47,6 +47,11 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
+            if (IsComposedOfAQuotedEmptyString(input))
+            {
+                return false;
+            }
+
             string inputCopyWithoutQuotes = RemoveQuotes(input);
 
             if (EndsWithAnUnescapedReverseSolidus(inputCopyWithoutQuotes))
@@ -85,17 +90,17 @@ namespace Json
         {
             int lastPosition = input.Length - 1;
 
-            if (input.Length < 2)
-            {
-                return input;
-            }
-
             if (input[0] == '"' && input[lastPosition] == '"')
             {
                 return input[1..lastPosition];
             }
 
             return input;
+        }
+
+        static bool IsComposedOfAQuotedEmptyString(string input)
+        {
+            return input.Length == 2;
         }
 
         static bool EndsWithAnUnescapedReverseSolidus(string input)
