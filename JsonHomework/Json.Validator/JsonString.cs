@@ -54,6 +54,11 @@ namespace Json
 
             string inputCopyWithoutQuotes = RemoveQuotes(input);
 
+            if (inputCopyWithoutQuotes.Length == 1)
+            {
+                return IsAValidCharacter(input);
+            }
+
             if (EndsWithAnUnescapedReverseSolidus(inputCopyWithoutQuotes))
             {
                 return true;
@@ -98,6 +103,11 @@ namespace Json
             return input;
         }
 
+        static bool IsAValidCharacter(string input)
+        {
+            return input[0] != '"' && input[0] != '\\';
+        }
+
         static bool IsComposedOfAQuotedEmptyString(string input)
         {
             return input.Length == 2;
@@ -105,9 +115,10 @@ namespace Json
 
         static bool EndsWithAnUnescapedReverseSolidus(string input)
         {
-            int penultimatePosition = input.Length - 2;
+            int lastCharacter = input[input.Length - 1];
+            int penultimateCharacter = input[input.Length - 2];
 
-            return input[input.Length - 1] == '\\' && input[penultimatePosition] != '\\';
+            return lastCharacter == '\\' && penultimateCharacter != '\\';
         }
 
         static bool IsValidEscapeSequence(string input)
