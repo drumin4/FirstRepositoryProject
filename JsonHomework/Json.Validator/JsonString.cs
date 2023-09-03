@@ -72,7 +72,7 @@ namespace Json
                 }
                 else if (inputCopyWithoutQuotes[0] == '\\' && IsValidEscapeSequence(inputCopyWithoutQuotes))
                 {
-                    inputCopyWithoutQuotes = RemoveFormerEscapeSequence(inputCopyWithoutQuotes);
+                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
                 }
                 else
                 {
@@ -83,7 +83,7 @@ namespace Json
             return false;
         }
 
-        static string RemoveFormerEscapeSequence(string input)
+        static string RemoveCurrentEscapeSequenceFromString(string input)
         {
             const int escapeSequenceLength = 2;
             const int unicodeEscapeSequenceLength = 6;
