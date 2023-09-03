@@ -66,11 +66,11 @@ namespace Json
 
             while (inputCopyWithoutQuotes.Length > 0)
             {
-                if (inputCopyWithoutQuotes[0] == '\\' && !IsValidEscapeSequence(inputCopyWithoutQuotes))
+                if (inputCopyWithoutQuotes[0] == '\\' && !IsCurrentEscapeSequenceValid(inputCopyWithoutQuotes))
                 {
                     return true;
                 }
-                else if (inputCopyWithoutQuotes[0] == '\\' && IsValidEscapeSequence(inputCopyWithoutQuotes))
+                else if (inputCopyWithoutQuotes[0] == '\\' && IsCurrentEscapeSequenceValid(inputCopyWithoutQuotes))
                 {
                     inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
                 }
@@ -121,7 +121,7 @@ namespace Json
             return lastCharacter == '\\' && penultimateCharacter != '\\';
         }
 
-        static bool IsValidEscapeSequence(string input)
+        static bool IsCurrentEscapeSequenceValid(string input)
         {
             char characterAfterReverseSolidus = input[1];
 
