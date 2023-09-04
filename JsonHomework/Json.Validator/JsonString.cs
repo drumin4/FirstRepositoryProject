@@ -17,22 +17,20 @@ namespace Json
                 return false;
             }
 
-            return IsFreeOfControlCharacters(input) && IsWrappedInDoubleQuotes(input) && !ContainsUnrecognizedEscapeCharacters(input);
+            return !ContainsControlCharacters(input) && IsWrappedInDoubleQuotes(input) && !ContainsUnrecognizedEscapeCharacters(input);
         }
 
-        private static bool IsFreeOfControlCharacters(string input)
+        private static bool ContainsControlCharacters(string input)
         {
-            const string controlCharacters = "\n\r\t\f\b";
-
             foreach (char c in input)
             {
-                if (controlCharacters.Contains(c))
+                if (c < ' ')
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
 
         private static bool IsWrappedInDoubleQuotes(string input)
