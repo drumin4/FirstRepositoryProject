@@ -35,12 +35,7 @@ namespace Json
 
         private static bool IsWrappedInDoubleQuotes(string input)
         {
-            if (input.Length < 2)
-            {
-                return false;
-            }
-
-            return input[0] == '"' && input[input.Length - 1] == '"';
+            return input.Length >= 2 && input[0] == '"' && input[input.Length - 1] == '"';
         }
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
