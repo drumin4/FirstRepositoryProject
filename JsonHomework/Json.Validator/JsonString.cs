@@ -40,22 +40,12 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            if (input.Length == 2) //IsComposedOfAQuotedEmptyString
+            if (input.Length == 2)
             {
                 return false;
             }
 
             string inputCopyWithoutQuotes = RemoveQuotes(input);
-
-            //if (inputCopyWithoutQuotes.Length == 1)
-            //{
-            //    return IsAValidCharacter(input);
-            //}
-
-            //if (EndsWithAnUnescapedReverseSolidus(inputCopyWithoutQuotes))
-            //{
-            //    return true;
-            //}
 
             while (inputCopyWithoutQuotes.Length > 0)
             {
@@ -101,21 +91,13 @@ namespace Json
             return input;
         }
 
-        static bool IsAValidCharacter(string input)
-        {
-            return input[0] != '"' && input[0] != '\\';
-        }
-
-        static bool EndsWithAnUnescapedReverseSolidus(string input)
-        {
-            int lastCharacter = input[input.Length - 1];
-            int penultimateCharacter = input[input.Length - 2];
-
-            return lastCharacter == '\\' && penultimateCharacter != '\\';
-        }
-
         static bool CurrentEscapeSequenceIsValid(string input)
         {
+            if (input.Length <= 1)
+            {
+                return false;
+            }
+
             char characterAfterReverseSolidus = input[1];
 
             return escapableCharacters.Contains(characterAfterReverseSolidus) || IsAUnicodeEscapeSequence(input);

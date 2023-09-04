@@ -153,13 +153,13 @@ namespace Json.Facts
         [Fact()]
         public void DoesNotContainOnlyAQuotedUnescapedReverseSolidus()
         {
-            Assert.True(IsJsonString(Quoted(@"\")));
+            Assert.False(IsJsonString(Quoted(@"\")));
         }
 
         [Fact()]
         public void DoesNotContainOnlyAQuotedQuote()
         {
-            Assert.True(IsJsonString(Quoted(@"""")));
+            Assert.False(IsJsonString(Quoted(@"""")));
         }
 
         public static string Quoted(string text)
