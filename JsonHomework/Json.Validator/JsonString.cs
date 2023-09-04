@@ -79,12 +79,7 @@ namespace Json
         {
             int lastPosition = input.Length - 1;
 
-            if (input[0] == '"' && input[lastPosition] == '"')
-            {
-                return input[1..lastPosition];
-            }
-
-            return input;
+            return input[1..lastPosition];
         }
 
         static bool CurrentEscapeSequenceIsValid(string input)
