@@ -162,6 +162,12 @@ namespace Json.Facts
             Assert.False(IsJsonString(Quoted(@"""")));
         }
 
+        [Fact()]
+        public void CanContainEscapedQuotedQuotes()
+        {
+            Assert.True(IsJsonString(Quoted(@"""""")));
+        }
+
         public static string Quoted(string text)
             => $"\"{text}\"";
     }

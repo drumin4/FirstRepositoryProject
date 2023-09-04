@@ -55,7 +55,7 @@ namespace Json
                 }
                 else if (inputCopyWithoutQuotes.StartsWith('"'))
                 {
-                    if (inputCopyWithoutQuotes.Length == 1 || inputCopyWithoutQuotes[1] == '"')
+                    if (inputCopyWithoutQuotes.Length == 1 || inputCopyWithoutQuotes[1] != '"')
                     {
                         return true;
                     }
