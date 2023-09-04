@@ -40,31 +40,31 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            string inputCopyWithoutQuotes = RemoveQuotes(input);
+            string inputCopyWithoutQuotesToTestOn = RemoveQuotes(input);
 
-            while (inputCopyWithoutQuotes.Length > 0)
+            while (inputCopyWithoutQuotesToTestOn.Length > 0)
             {
-                if (inputCopyWithoutQuotes.StartsWith('\\'))
+                if (inputCopyWithoutQuotesToTestOn.StartsWith('\\'))
                 {
-                    if (!CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
+                    if (!CurrentEscapeSequenceIsValid(inputCopyWithoutQuotesToTestOn))
                     {
                         return true;
                     }
 
-                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
+                    inputCopyWithoutQuotesToTestOn = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotesToTestOn);
                 }
-                else if (inputCopyWithoutQuotes.StartsWith('"'))
+                else if (inputCopyWithoutQuotesToTestOn.StartsWith('"'))
                 {
-                    if (inputCopyWithoutQuotes.Length == 1 || inputCopyWithoutQuotes[1] != '"')
+                    if (inputCopyWithoutQuotesToTestOn.Length == 1 || inputCopyWithoutQuotesToTestOn[1] != '"')
                     {
                         return true;
                     }
 
-                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
+                    inputCopyWithoutQuotesToTestOn = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotesToTestOn);
                 }
                 else
                 {
-                    inputCopyWithoutQuotes = RemoveCurrentCharacterFromString(inputCopyWithoutQuotes);
+                    inputCopyWithoutQuotesToTestOn = RemoveCurrentCharacterFromString(inputCopyWithoutQuotesToTestOn);
                 }
             }
 
@@ -118,7 +118,7 @@ namespace Json
             {
                 char c = input[i];
 
-                if (!IsHexDigit(c))
+                if (!IsValidHexDigit(c))
                 {
                     return false;
                 }
@@ -127,11 +127,19 @@ namespace Json
             return true;
         }
 
-        static bool IsHexDigit(char c)
+        static bool IsValidHexDigit(char c)
         {
-            const string validHexDigits = "0123456789ABCDEFabcdef";
+            return IsNumericHexDigit(c) || IsAlphabeticHexDigit(c);
+        }
 
-            return validHexDigits.Contains(c);
+        static bool IsNumericHexDigit(char c)
+        {
+            return c >= '0' && c <= '9';
+        }
+
+        static bool IsAlphabeticHexDigit(char c)
+        {
+            return (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
         }
     }
 }
