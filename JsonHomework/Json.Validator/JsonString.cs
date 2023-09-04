@@ -40,7 +40,9 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            if (input.Length == 2)
+            const int quotedEmptyStringLength = 2;
+
+            if (input.Length == quotedEmptyStringLength)
             {
                 return false;
             }
@@ -49,12 +51,13 @@ namespace Json
 
             while (inputCopyWithoutQuotes.Length > 0)
             {
-                if (inputCopyWithoutQuotes[0] == '\\' && !CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
+                if (inputCopyWithoutQuotes.StartsWith('\\'))
                 {
-                    return true;
-                }
-                else if (inputCopyWithoutQuotes[0] == '\\' && CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
-                {
+                    if (!CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
+                    {
+                        return true;
+                    }
+
                     inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
                 }
                 else
@@ -93,7 +96,9 @@ namespace Json
 
         static bool CurrentEscapeSequenceIsValid(string input)
         {
-            if (input.Length <= 1)
+            const int minimumLengthForValidEscapeSequence = 2;
+
+            if (input.Length < minimumLengthForValidEscapeSequence)
             {
                 return false;
             }
@@ -127,11 +132,9 @@ namespace Json
 
         static bool IsHexDigit(char c)
         {
-            const string validNumbers = "0123456789";
-            const string validUppercaseLetters = "ABCDEF";
-            const string validLowercaseLetters = "abcdef";
+            const string validHexDigits = "0123456789ABCDEFabcdef";
 
-            return validNumbers.Contains(c) || validUppercaseLetters.Contains(c) || validLowercaseLetters.Contains(c);
+            return validHexDigits.Contains(c);
         }
     }
 }
