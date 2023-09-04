@@ -40,13 +40,6 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            const int quotedEmptyStringLength = 2;
-
-            if (input.Length == quotedEmptyStringLength)
-            {
-                return false;
-            }
-
             string inputCopyWithoutQuotes = RemoveQuotes(input);
 
             while (inputCopyWithoutQuotes.Length > 0)
