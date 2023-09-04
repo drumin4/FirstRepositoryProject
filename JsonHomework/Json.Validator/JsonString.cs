@@ -53,6 +53,15 @@ namespace Json
 
                     inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
                 }
+                else if (inputCopyWithoutQuotes.StartsWith('"'))
+                {
+                    if (inputCopyWithoutQuotes.Length == 1 || inputCopyWithoutQuotes[1] == '"')
+                    {
+                        return true;
+                    }
+
+                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
+                }
                 else
                 {
                     inputCopyWithoutQuotes = RemoveCurrentCharacterFromString(inputCopyWithoutQuotes);
