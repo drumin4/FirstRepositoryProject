@@ -40,22 +40,22 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            if (IsComposedOfAQuotedEmptyString(input))
+            if (input.Length == 2) //IsComposedOfAQuotedEmptyString
             {
                 return false;
             }
 
             string inputCopyWithoutQuotes = RemoveQuotes(input);
 
-            if (inputCopyWithoutQuotes.Length == 1)
-            {
-                return IsAValidCharacter(input);
-            }
+            //if (inputCopyWithoutQuotes.Length == 1)
+            //{
+            //    return IsAValidCharacter(input);
+            //}
 
-            if (EndsWithAnUnescapedReverseSolidus(inputCopyWithoutQuotes))
-            {
-                return true;
-            }
+            //if (EndsWithAnUnescapedReverseSolidus(inputCopyWithoutQuotes))
+            //{
+            //    return true;
+            //}
 
             while (inputCopyWithoutQuotes.Length > 0)
             {
@@ -104,11 +104,6 @@ namespace Json
         static bool IsAValidCharacter(string input)
         {
             return input[0] != '"' && input[0] != '\\';
-        }
-
-        static bool IsComposedOfAQuotedEmptyString(string input)
-        {
-            return input.Length == 2;
         }
 
         static bool EndsWithAnUnescapedReverseSolidus(string input)
