@@ -40,31 +40,31 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            string inputCopyWithoutQuotesToTestOn = RemoveQuotes(input);
+            string inputCopyWithoutQuotes = RemoveQuotes(input);
 
-            while (inputCopyWithoutQuotesToTestOn.Length > 0)
+            while (inputCopyWithoutQuotes.Length > 0)
             {
-                if (inputCopyWithoutQuotesToTestOn.StartsWith('\\'))
+                if (inputCopyWithoutQuotes.StartsWith('\\'))
                 {
-                    if (!CurrentEscapeSequenceIsValid(inputCopyWithoutQuotesToTestOn))
+                    if (!CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
                     {
                         return true;
                     }
 
-                    inputCopyWithoutQuotesToTestOn = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotesToTestOn);
+                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
                 }
-                else if (inputCopyWithoutQuotesToTestOn.StartsWith('"'))
+                else if (inputCopyWithoutQuotes.StartsWith('"'))
                 {
-                    if (inputCopyWithoutQuotesToTestOn.Length == 1 || inputCopyWithoutQuotesToTestOn[1] != '"')
+                    if (inputCopyWithoutQuotes.Length == 1 || inputCopyWithoutQuotes[1] != '"')
                     {
                         return true;
                     }
 
-                    inputCopyWithoutQuotesToTestOn = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotesToTestOn);
+                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
                 }
                 else
                 {
-                    inputCopyWithoutQuotesToTestOn = RemoveCurrentCharacterFromString(inputCopyWithoutQuotesToTestOn);
+                    inputCopyWithoutQuotes = RemoveCurrentCharacterFromString(inputCopyWithoutQuotes);
                 }
             }
 
