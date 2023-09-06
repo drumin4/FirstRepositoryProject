@@ -40,55 +40,30 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            string inputCopyWithoutQuotes = ExtractTextFromQuotes(input);
+            string checkupInputCopy = input[1..^1];
 
-            while (inputCopyWithoutQuotes.Length > 0)
+            while (checkupInputCopy.Length > 0)
             {
-                if (inputCopyWithoutQuotes.StartsWith('\\'))
+                if (checkupInputCopy.StartsWith('\\'))
                 {
-                    if (!CurrentEscapeSequenceIsValid(inputCopyWithoutQuotes))
+                    const int escapeSequenceLength = 2;
+                    const int unicodeEscapeSequenceLength = 6;
+
+                    if (!CurrentEscapeSequenceIsValid(checkupInputCopy))
                     {
                         return true;
                     }
 
-                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
-                }
-                else if (inputCopyWithoutQuotes.StartsWith('"'))
-                {
-                    if (inputCopyWithoutQuotes.Length == 1 || inputCopyWithoutQuotes[1] != '"')
-                    {
-                        return true;
-                    }
-
-                    inputCopyWithoutQuotes = RemoveCurrentEscapeSequenceFromString(inputCopyWithoutQuotes);
+                    checkupInputCopy = escapableCharacters.Contains(checkupInputCopy[1]) ?
+                        checkupInputCopy[escapeSequenceLength..] : checkupInputCopy[unicodeEscapeSequenceLength..];
                 }
                 else
                 {
-                    inputCopyWithoutQuotes = RemoveCurrentCharacterFromString(inputCopyWithoutQuotes);
+                    checkupInputCopy = checkupInputCopy[1..];
                 }
             }
 
             return false;
-        }
-
-        static string RemoveCurrentEscapeSequenceFromString(string input)
-        {
-            const int escapeSequenceLength = 2;
-            const int unicodeEscapeSequenceLength = 6;
-
-            return escapableCharacters.Contains(input[1]) ? input[escapeSequenceLength..] : input[unicodeEscapeSequenceLength..];
-        }
-
-        static string RemoveCurrentCharacterFromString(string input)
-        {
-            return input[1..];
-        }
-
-        static string ExtractTextFromQuotes(string input)
-        {
-            int lastPosition = input.Length - 1;
-
-            return input[1..lastPosition];
         }
 
         static bool CurrentEscapeSequenceIsValid(string input)
