@@ -40,7 +40,7 @@ namespace Json
 
         static bool ContainsUnrecognizedEscapeCharacters(string input)
         {
-            string inputCopyWithoutQuotes = RemoveQuotes(input);
+            string inputCopyWithoutQuotes = ExtractTextFromQuotes(input);
 
             while (inputCopyWithoutQuotes.Length > 0)
             {
@@ -84,7 +84,7 @@ namespace Json
             return input[1..];
         }
 
-        static string RemoveQuotes(string input)
+        static string ExtractTextFromQuotes(string input)
         {
             int lastPosition = input.Length - 1;
 
