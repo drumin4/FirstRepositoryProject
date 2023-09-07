@@ -6,17 +6,19 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return double.TryParse(input, out double result) && !StartsWithZero(input) && !EndsWithDot(input);
+            return double.TryParse(input, out double dummyResult) && !StartsWithZero(input) && !EndsWithDot(input);
         }
 
         private static bool StartsWithZero(string input)
         {
-            return input[0] == '0' && (!input.Contains('.') && input.Length != 1);
+            int positionOfZero = input[0] == '-' ? 1 : 0;
+
+            return input[positionOfZero] == '0' && (input.Length > positionOfZero + 1 && input[positionOfZero + 1] != '.');
         }
 
         private static bool EndsWithDot(string input)
         {
-            return input[input.Length - 1] == '.';
+            return input[^1] == '.';
         }
     }
 }
