@@ -7,7 +7,7 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return !StartsWithZero(input) && DotPlacementIsValid(input);
+            return !StartsWithZero(input) && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
         }
 
         private static bool DotPlacementIsValid(string input)
@@ -30,6 +30,16 @@ namespace Json
         private static bool EndsWithDot(string input)
         {
             return input[^1] == '.';
+        }
+
+        private static bool ExponentPlacementIsValid(string input)
+        {
+            return HasNoMoreThanOneExponent(input);
+        }
+
+        private static bool HasNoMoreThanOneExponent(string input)
+        {
+            return input.ToLower().IndexOf('e') == input.ToLower().LastIndexOf('e');
         }
     }
 }
