@@ -7,7 +7,27 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return !StartsWithZero(input) && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
+            return AllCharsAreValidNotations(input) && !StartsWithZero(input) && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
+        }
+
+        private static bool AllCharsAreValidNotations(string input)
+        {
+            return !string.IsNullOrEmpty(input) && !ContainsInvalidLetters(input);
+        }
+
+        private static bool ContainsInvalidLetters(string input)
+        {
+            const string validCharacters = "eE.-+";
+
+            foreach (char c in input)
+            {
+                if ((c < '0' || c > '9') && !validCharacters.Contains(c))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool DotPlacementIsValid(string input)
