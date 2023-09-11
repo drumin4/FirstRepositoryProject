@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Json
 {
@@ -6,12 +7,12 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return IsValidDoubleNumber(input) && !StartsWithZero(input) && !EndsWithDot(input);
+            return !StartsWithZero(input) && DotPlacementIsValid(input);
         }
 
-        private static bool IsValidDoubleNumber(string input)
+        private static bool DotPlacementIsValid(string input)
         {
-            return double.TryParse(input, out double dummyResult);
+            return !EndsWithDot(input) && HasNoMoreThanOneDot(input);
         }
 
         private static bool StartsWithZero(string input)
@@ -19,6 +20,11 @@ namespace Json
             int positionOfZero = input[0] == '-' ? 1 : 0;
 
             return input[positionOfZero] == '0' && (input.Length > positionOfZero + 1 && input[positionOfZero + 1] != '.');
+        }
+
+        private static bool HasNoMoreThanOneDot(string input)
+        {
+            return input.IndexOf(".") == input.LastIndexOf(".");
         }
 
         private static bool EndsWithDot(string input)
