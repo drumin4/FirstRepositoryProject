@@ -12,10 +12,10 @@ namespace Json
 
         private static bool ContainsOnlyValidNotations(string input)
         {
-            return !string.IsNullOrEmpty(input) && !ContainsInvalidLetters(input);
+            return !string.IsNullOrEmpty(input) && !ContainsInvalidCharacters(input);
         }
 
-        private static bool ContainsInvalidLetters(string input)
+        private static bool ContainsInvalidCharacters(string input)
         {
             const string validCharacters = "eE.-+";
 
@@ -32,24 +32,14 @@ namespace Json
 
         private static bool DotPlacementIsValid(string input)
         {
-            return !EndsWithDot(input) && HasNoMoreThanOneDot(input);
+            return input[^1] != '.' && input.IndexOf(".") == input.LastIndexOf(".");
         }
 
         private static bool StartsWithZero(string input)
         {
-            int positionOfZero = input[0] == '-' ? 1 : 0;
+            int expectedPositionOfZero = input[0] == '-' ? 1 : 0;
 
-            return input[positionOfZero] == '0' && (input.Length > positionOfZero + 1 && input[positionOfZero + 1] != '.');
-        }
-
-        private static bool HasNoMoreThanOneDot(string input)
-        {
-            return input.IndexOf(".") == input.LastIndexOf(".");
-        }
-
-        private static bool EndsWithDot(string input)
-        {
-            return input[^1] == '.';
+            return input[expectedPositionOfZero] == '0' && (!input.EndsWith('0') && input[expectedPositionOfZero + 1] != '.');
         }
 
         private static bool ExponentPlacementIsValid(string input)
