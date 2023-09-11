@@ -7,10 +7,10 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return ContainsValidNotations(input) && !StartsWithZero(input) && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
+            return ContainsOnlyValidNotations(input) && !StartsWithZero(input) && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
         }
 
-        private static bool ContainsValidNotations(string input)
+        private static bool ContainsOnlyValidNotations(string input)
         {
             return !string.IsNullOrEmpty(input) && !ContainsInvalidLetters(input);
         }
@@ -54,12 +54,40 @@ namespace Json
 
         private static bool ExponentPlacementIsValid(string input)
         {
-            return HasNoMoreThanOneExponent(input);
+            return !input.ToLower().Contains("e")
+                || (ExponentIsNoMoreThanOne(input) && ExponentIsComplete(input) && ExponentIsAfterTheFraction(input));
         }
 
-        private static bool HasNoMoreThanOneExponent(string input)
+        private static bool ExponentIsNoMoreThanOne(string input)
         {
             return input.ToLower().IndexOf('e') == input.ToLower().LastIndexOf('e');
+        }
+
+        private static bool ExponentIsAfterTheFraction(string input)
+        {
+            return input.ToLower().IndexOf('e') == -1 || input.IndexOf('.') < input.ToLower().IndexOf('e');
+        }
+
+        private static bool ExponentIsComplete(string input)
+        {
+            int exponentIndex = input.ToLower().IndexOf('e');
+            int positiveSignIndex = input.IndexOf("+");
+            int negativeSignIndex = input.IndexOf("-");
+
+            if (positiveSignIndex != -1)
+            {
+                return !input.EndsWith(input[positiveSignIndex]);
+            }
+            else if (negativeSignIndex != -1)
+            {
+                return !input.EndsWith(input[negativeSignIndex]);
+            }
+            else if (exponentIndex != -1)
+            {
+                return !input.EndsWith(input[exponentIndex]);
+            }
+
+            return true;
         }
     }
 }
