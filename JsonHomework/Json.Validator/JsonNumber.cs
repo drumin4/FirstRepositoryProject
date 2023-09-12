@@ -69,24 +69,11 @@ namespace Json
 
         private static bool ExponentIsComplete(string input)
         {
+            const string plusMinus = "-+";
             int exponentIndex = input.ToLower().IndexOf('e');
-            int positiveSignIndex = input.IndexOf("+");
-            int negativeSignIndex = input.IndexOf("-");
 
-            if (positiveSignIndex != -1)
-            {
-                return !input.EndsWith(input[positiveSignIndex]);
-            }
-            else if (negativeSignIndex != -1)
-            {
-                return !input.EndsWith(input[negativeSignIndex]);
-            }
-            else if (exponentIndex != -1)
-            {
-                return !input.EndsWith(input[exponentIndex]);
-            }
-
-            return true;
+            return input.ToLower().Substring(exponentIndex).Length > 1 && plusMinus.Contains(input[exponentIndex + 1])
+                && input.ToLower().Substring(exponentIndex + 1).Length > 1;
         }
     }
 }
