@@ -38,7 +38,17 @@ namespace Json
 
         private static bool PlacementOfZeroIsValid(string input)
         {
-            return !input.StartsWith('0') && (!input.StartsWith('-') || input[1] != '0');
+            return PlacementOfZeroInPositiveNumberIsValid(input) && PlacementOfZeroInNegativeNumberIsValid(input);
+        }
+
+        private static bool PlacementOfZeroInPositiveNumberIsValid(string input)
+        {
+            return input == "0" || input.StartsWith("0.") || !input.StartsWith('0');
+        }
+
+        private static bool PlacementOfZeroInNegativeNumberIsValid(string input)
+        {
+            return input == "-0" || input.StartsWith("-0.") || (!input.StartsWith('-') || input[1] != '0');
         }
 
         private static bool ExponentPlacementIsValid(string input)
