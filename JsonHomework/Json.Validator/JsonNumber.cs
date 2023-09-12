@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Json
 {
@@ -70,6 +71,58 @@ namespace Json
         private static bool ExponentIsComplete(string input)
         {
             return !input.ToLower().EndsWith('e') && !input.EndsWith('+') && !input.EndsWith('-');
+        }
+
+        private static string ExtractInteger(string input)
+        {
+            if (input.Contains("."))
+            {
+                return input.Substring(0, input.IndexOf('.'));
+            }
+            else if (input.ToLower().Contains('e'))
+            {
+                return input.Substring(0, input.ToLower().IndexOf('e'));
+            }
+
+            return input;
+        }
+
+        private static string ExtractFraction(string input)
+        {
+            if (!input.Contains("."))
+            {
+                return null;
+            }
+
+            if (input.ToLower().Contains('e'))
+            {
+                return input.Substring(input.ToLower().IndexOf('.') + 1, input.ToLower().IndexOf('e'));
+            }
+
+            return input.Substring(input.IndexOf('.') + 1);
+        }
+
+        private static string ExtractExponent(string input)
+        {
+            if (!input.ToLower().Contains("e"))
+            {
+                return null;
+            }
+
+            return input.Substring(input.ToLower().IndexOf('e') + 1);
+        }
+
+        private static bool CheckNumberParts(string input)
+        {
+            foreach (char ch in input)
+            {
+                if (ch < '0' || ch > '9')
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
