@@ -7,7 +7,8 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return ContainsOnlyValidNotations(input) && !StartsWithZero(input) && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
+            return ContainsOnlyValidNotations(input) && PlacementOfZeroIsValid(input)
+                && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
         }
 
         private static bool ContainsOnlyValidNotations(string input)
@@ -35,11 +36,9 @@ namespace Json
             return input[^1] != '.' && input.IndexOf(".") == input.LastIndexOf(".");
         }
 
-        private static bool StartsWithZero(string input)
+        private static bool PlacementOfZeroIsValid(string input)
         {
-            int expectedPositionOfZero = input[0] == '-' ? 1 : 0;
-
-            return input[expectedPositionOfZero] == '0' && (!input.EndsWith('0') && input[expectedPositionOfZero + 1] != '.');
+            return !input.StartsWith('0') && (!input.StartsWith('-') || input[1] != '0');
         }
 
         private static bool ExponentPlacementIsValid(string input)
