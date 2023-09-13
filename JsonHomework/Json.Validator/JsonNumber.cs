@@ -8,8 +8,32 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
-            return ContainsOnlyValidNotations(input) && PlacementOfZeroIsValid(input)
-                && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
+            return IntegerPartIsValid(ExtractInteger(input)) && FractionalPartIsValid(ExtractFraction(input))
+                && ExponentPartIsValid(ExtractExponent(input));
+
+            //return ContainsOnlyValidNotations(input) && PlacementOfZeroIsValid(input)
+            //    && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
+        }
+
+        private static bool IntegerPartIsValid(string input)
+        {
+
+        }
+
+        private static bool FractionalPartIsValid(string input)
+        {
+            if (input == null)
+            {
+                return true;
+            }
+        }
+
+        private static bool ExponentPartIsValid(string input)
+        {
+            if (input == null)
+            {
+                return true;
+            }
         }
 
         private static bool ContainsOnlyValidNotations(string input)
