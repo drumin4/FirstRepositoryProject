@@ -8,93 +8,64 @@ namespace Json
     {
         public static bool IsJsonNumber(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
             return IntegerPartIsValid(ExtractInteger(input)) && FractionalPartIsValid(ExtractFraction(input))
-                && ExponentPartIsValid(ExtractExponent(input));
-
-            //return ContainsOnlyValidNotations(input) && PlacementOfZeroIsValid(input)
-            //    && DotPlacementIsValid(input) && ExponentPlacementIsValid(input);
+                && ExponentialPartIsValid(ExtractExponent(input));
         }
 
-        private static bool IntegerPartIsValid(string input)
+        private static bool IntegerPartIsValid(string integerPartOfInput)
         {
-
+            return ContainsOnlyValidNotations(integerPartOfInput, true) && PlacementOfZeroIsValid(integerPartOfInput);
         }
 
-        private static bool FractionalPartIsValid(string input)
+        private static bool FractionalPartIsValid(string fractionalPartOfInput)
         {
-            if (input == null)
+            if (fractionalPartOfInput == null)
             {
                 return true;
             }
+
+            return ContainsOnlyValidNotations(fractionalPartOfInput, false);
         }
 
-        private static bool ExponentPartIsValid(string input)
+        private static bool ExponentialPartIsValid(string exponentialPartOfInput)
         {
-            if (input == null)
+            if (exponentialPartOfInput == null)
             {
                 return true;
             }
+
+            return ContainsOnlyValidNotations(exponentialPartOfInput, true) && PlacementOfZeroIsValid(exponentialPartOfInput);
         }
 
-        private static bool ContainsOnlyValidNotations(string input)
+        private static bool ContainsOnlyValidNotations(string input, bool integralOrExponential)
         {
-            return !string.IsNullOrEmpty(input) && !ContainsInvalidCharacters(input);
-        }
-
-        private static bool ContainsInvalidCharacters(string input)
-        {
-            const string validCharacters = "eE.-+";
-
             foreach (char c in input)
             {
-                if ((c < '0' || c > '9') && !validCharacters.Contains(c))
+                if (integralOrExponential && input.IndexOf(c) == 0 && (c == '-' || c == '+'))
                 {
-                    return true;
+                    continue;
+                }
+
+                if (c < '0' || c > '9')
+                {
+                    return false;
                 }
             }
 
-            return false;
+            return true;
         }
 
-        private static bool DotPlacementIsValid(string input)
+        private static bool PlacementOfZeroIsValid(string integerPartOfInput)
         {
-            return input[^1] != '.' && input.IndexOf(".") == input.LastIndexOf(".");
-        }
-
-        private static bool PlacementOfZeroIsValid(string input)
-        {
-            return PlacementOfZeroInPositiveNumberIsValid(input) && PlacementOfZeroInNegativeNumberIsValid(input);
-        }
-
-        private static bool PlacementOfZeroInPositiveNumberIsValid(string input)
-        {
-            return input == "0" || input.StartsWith("0.") || !input.StartsWith('0');
-        }
-
-        private static bool PlacementOfZeroInNegativeNumberIsValid(string input)
-        {
-            return input == "-0" || input.StartsWith("-0.") || (!input.StartsWith('-') || input[1] != '0');
-        }
-
-        private static bool ExponentPlacementIsValid(string input)
-        {
-            return !input.ToLower().Contains("e")
-                || (ExponentIsNoMoreThanOne(input) && ExponentIsComplete(input) && ExponentIsAfterTheFraction(input));
-        }
-
-        private static bool ExponentIsNoMoreThanOne(string input)
-        {
-            return input.ToLower().IndexOf('e') == input.ToLower().LastIndexOf('e');
-        }
-
-        private static bool ExponentIsAfterTheFraction(string input)
-        {
-            return input.ToLower().IndexOf('e') == -1 || input.IndexOf('.') < input.ToLower().IndexOf('e');
-        }
-
-        private static bool ExponentIsComplete(string input)
-        {
-            return !input.ToLower().EndsWith('e') && !input.EndsWith('+') && !input.EndsWith('-');
+           return (!integerPartOfInput.StartsWith("0")
+                   && !integerPartOfInput.StartsWith("-0")
+                   && !integerPartOfInput.StartsWith("+0"))
+                   || integerPartOfInput.Length <= integerPartOfInput.IndexOf('0') + 1;
         }
 
         private static string ExtractInteger(string input)
@@ -134,19 +105,6 @@ namespace Json
             }
 
             return input.Substring(input.ToLower().IndexOf('e') + 1);
-        }
-
-        private static bool CheckNumberParts(string input)
-        {
-            foreach (char ch in input)
-            {
-                if (ch < '0' || ch > '9')
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }
