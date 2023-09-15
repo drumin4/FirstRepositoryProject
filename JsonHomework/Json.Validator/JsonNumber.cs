@@ -13,20 +13,25 @@ namespace Json
                 return false;
             }
 
-            return IntegerPartIsValid(ExtractInteger(input)) && FractionalPartIsValid(ExtractFraction(input))
+            return IntegralPartIsValid(ExtractInteger(input)) && FractionalPartIsValid(ExtractFraction(input))
                 && ExponentialPartIsValid(ExtractExponent(input));
         }
 
-        private static bool IntegerPartIsValid(string integerPartOfInput)
+        private static bool IntegralPartIsValid(string integralPartOfInput)
         {
-            return ContainsOnlyValidNotations(integerPartOfInput, true) && PlacementOfZeroIsValid(integerPartOfInput);
+            return ContainsOnlyValidNotations(integralPartOfInput, true) && PlacementOfZeroIsValid(integralPartOfInput);
         }
 
         private static bool FractionalPartIsValid(string fractionalPartOfInput)
         {
-            if (fractionalPartOfInput == null)
+            if (fractionalPartOfInput == "number doesn't contain a fraction")
             {
                 return true;
+            }
+
+            if (string.IsNullOrEmpty(fractionalPartOfInput))
+            {
+                return false;
             }
 
             return ContainsOnlyValidNotations(fractionalPartOfInput, false);
@@ -34,9 +39,14 @@ namespace Json
 
         private static bool ExponentialPartIsValid(string exponentialPartOfInput)
         {
-            if (exponentialPartOfInput == null)
+            if (exponentialPartOfInput == "number doesn't contain an exponent")
             {
                 return true;
+            }
+
+            if (string.IsNullOrEmpty(exponentialPartOfInput) || exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
+            {
+                return false;
             }
 
             return ContainsOnlyValidNotations(exponentialPartOfInput, true) && PlacementOfZeroIsValid(exponentialPartOfInput);
@@ -60,12 +70,10 @@ namespace Json
             return true;
         }
 
-        private static bool PlacementOfZeroIsValid(string integerPartOfInput)
+        private static bool PlacementOfZeroIsValid(string input)
         {
-           return (!integerPartOfInput.StartsWith("0")
-                   && !integerPartOfInput.StartsWith("-0")
-                   && !integerPartOfInput.StartsWith("+0"))
-                   || integerPartOfInput.Length <= integerPartOfInput.IndexOf('0') + 1;
+           return (!input.StartsWith("0") && !input.StartsWith("-0") && !input.StartsWith("+0"))
+                   || input.EndsWith("0");
         }
 
         private static string ExtractInteger(string input)
@@ -84,27 +92,29 @@ namespace Json
 
         private static string ExtractFraction(string input)
         {
-            if (!input.Contains("."))
+            if (input.Contains("."))
             {
-                return null;
+                if (input.ToLower().Contains('e'))
+                {
+                    int lengthFraction = input.ToLower().IndexOf('e') - (input.IndexOf('.') + 1);
+
+                    return input.Substring(input.IndexOf('.') + 1, lengthFraction);
+                }
+
+                return input.Substring(input.IndexOf('.') + 1);
             }
 
-            if (input.ToLower().Contains('e'))
-            {
-                return input.Substring(input.ToLower().IndexOf('.') + 1, input.ToLower().IndexOf('e'));
-            }
-
-            return input.Substring(input.IndexOf('.') + 1);
+            return "number doesn't contain a fraction";
         }
 
         private static string ExtractExponent(string input)
         {
-            if (!input.ToLower().Contains("e"))
+            if (input.ToLower().Contains("e"))
             {
-                return null;
+                return input.Substring(input.ToLower().IndexOf('e') + 1);
             }
 
-            return input.Substring(input.ToLower().IndexOf('e') + 1);
+            return "number doesn't contain an exponent";
         }
     }
 }
