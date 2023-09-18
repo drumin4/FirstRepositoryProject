@@ -13,8 +13,12 @@ namespace Json
                 return false;
             }
 
-            return IntegralPartIsValid(ExtractInteger(input)) && FractionalPartIsValid(ExtractFraction(input))
-                && ExponentialPartIsValid(ExtractExponent(input));
+            int dotIndex = input.IndexOf('.');
+            int exponentIndex = input.ToLower().IndexOf('e');
+
+            return IntegralPartIsValid(ExtractInteger(input, dotIndex, exponentIndex))
+                && FractionalPartIsValid(ExtractFraction(input, dotIndex, exponentIndex))
+                && ExponentialPartIsValid(ExtractExponent(input, exponentIndex));
         }
 
         private static bool IntegralPartIsValid(string integralPartOfInput)
@@ -76,42 +80,42 @@ namespace Json
                    || input.EndsWith("0");
         }
 
-        private static string ExtractInteger(string input)
+        private static string ExtractInteger(string input, int dotIndex, int exponentIndex)
         {
-            if (input.Contains("."))
+            if (dotIndex != -1)
             {
-                return input.Substring(0, input.IndexOf('.'));
+                return input.Substring(0, dotIndex);
             }
-            else if (input.ToLower().Contains('e'))
+            else if (exponentIndex != -1)
             {
-                return input.Substring(0, input.ToLower().IndexOf('e'));
+                return input.Substring(0, exponentIndex);
             }
 
             return input;
         }
 
-        private static string ExtractFraction(string input)
+        private static string ExtractFraction(string input, int dotIndex, int exponentIndex)
         {
-            if (input.Contains("."))
+            if (dotIndex != -1)
             {
-                if (input.ToLower().Contains('e'))
+                if (exponentIndex != -1)
                 {
-                    int lengthFraction = input.ToLower().IndexOf('e') - (input.IndexOf('.') + 1);
+                    int lengthFraction = exponentIndex - (dotIndex + 1);
 
-                    return input.Substring(input.IndexOf('.') + 1, lengthFraction);
+                    return input.Substring(dotIndex + 1, lengthFraction);
                 }
 
-                return input.Substring(input.IndexOf('.') + 1);
+                return input.Substring(dotIndex + 1);
             }
 
             return "number doesn't contain a fraction";
         }
 
-        private static string ExtractExponent(string input)
+        private static string ExtractExponent(string input, int exponentIndex)
         {
-            if (input.ToLower().Contains("e"))
+            if (exponentIndex != -1)
             {
-                return input.Substring(input.ToLower().IndexOf('e') + 1);
+                return input.Substring(exponentIndex + 1);
             }
 
             return "number doesn't contain an exponent";
