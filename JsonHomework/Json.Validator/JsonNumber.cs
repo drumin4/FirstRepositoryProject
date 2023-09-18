@@ -28,12 +28,12 @@ namespace Json
 
         private static bool FractionalPartIsValid(string fractionalPartOfInput)
         {
-            if (fractionalPartOfInput == "number doesn't contain a fraction")
+            if (fractionalPartOfInput == null)
             {
                 return true;
             }
 
-            if (string.IsNullOrEmpty(fractionalPartOfInput))
+            if (fractionalPartOfInput == "")
             {
                 return false;
             }
@@ -43,12 +43,12 @@ namespace Json
 
         private static bool ExponentialPartIsValid(string exponentialPartOfInput)
         {
-            if (exponentialPartOfInput == "number doesn't contain an exponent")
+            if (exponentialPartOfInput == null)
             {
                 return true;
             }
 
-            if (string.IsNullOrEmpty(exponentialPartOfInput) || exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
+            if (exponentialPartOfInput == "" || exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
             {
                 return false;
             }
@@ -96,29 +96,24 @@ namespace Json
 
         private static string ExtractFraction(string input, int dotIndex, int exponentIndex)
         {
-            if (dotIndex != -1)
+            if (dotIndex == -1)
             {
-                if (exponentIndex != -1)
-                {
-                    int lengthFraction = exponentIndex - (dotIndex + 1);
-
-                    return input.Substring(dotIndex + 1, lengthFraction);
-                }
-
-                return input.Substring(dotIndex + 1);
+                return null;
             }
 
-            return "number doesn't contain a fraction";
+            if (exponentIndex != -1)
+            {
+                int lengthFraction = exponentIndex - (dotIndex + 1);
+
+                return input.Substring(dotIndex + 1, lengthFraction);
+            }
+
+            return input.Substring(dotIndex + 1);
         }
 
         private static string ExtractExponent(string input, int exponentIndex)
         {
-            if (exponentIndex != -1)
-            {
-                return input.Substring(exponentIndex + 1);
-            }
-
-            return "number doesn't contain an exponent";
+            return exponentIndex != -1 ? input.Substring(exponentIndex + 1) : null;
         }
     }
 }
