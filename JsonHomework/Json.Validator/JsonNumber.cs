@@ -23,7 +23,7 @@ namespace Json
 
         private static bool IntegralPartIsValid(string integralPartOfInput)
         {
-            return ContainsOnlyValidNotations(integralPartOfInput, true) && PlacementOfZeroIsValid(integralPartOfInput);
+            return ContainsValidDigits(integralPartOfInput, true) && PlacementOfZeroIsValid(integralPartOfInput);
         }
 
         private static bool FractionalPartIsValid(string fractionalPartOfInput)
@@ -38,7 +38,7 @@ namespace Json
                 return false;
             }
 
-            return ContainsOnlyValidNotations(fractionalPartOfInput, false);
+            return ContainsValidDigits(fractionalPartOfInput, false);
         }
 
         private static bool ExponentialPartIsValid(string exponentialPartOfInput)
@@ -53,10 +53,10 @@ namespace Json
                 return false;
             }
 
-            return ContainsOnlyValidNotations(exponentialPartOfInput, true) && PlacementOfZeroIsValid(exponentialPartOfInput);
+            return ContainsValidDigits(exponentialPartOfInput, true) && PlacementOfZeroIsValid(exponentialPartOfInput);
         }
 
-        private static bool ContainsOnlyValidNotations(string input, bool integralOrExponential)
+        private static bool ContainsValidDigits(string input, bool integralOrExponential)
         {
             foreach (char c in input)
             {
@@ -84,11 +84,11 @@ namespace Json
         {
             if (dotIndex != -1)
             {
-                return input.Substring(0, dotIndex);
+                return input[0..dotIndex];
             }
             else if (exponentIndex != -1)
             {
-                return input.Substring(0, exponentIndex);
+                return input[0..exponentIndex];
             }
 
             return input;
@@ -101,19 +101,21 @@ namespace Json
                 return null;
             }
 
+            int fractionStartingIndex = dotIndex + 1;
+
             if (exponentIndex != -1)
             {
-                int lengthFraction = exponentIndex - (dotIndex + 1);
-
-                return input.Substring(dotIndex + 1, lengthFraction);
+                return input[fractionStartingIndex..exponentIndex];
             }
 
-            return input.Substring(dotIndex + 1);
+            return input[fractionStartingIndex..];
         }
 
         private static string ExtractExponent(string input, int exponentIndex)
         {
-            return exponentIndex != -1 ? input.Substring(exponentIndex + 1) : null;
+            int exponentStartingIndex = exponentIndex + 1;
+
+            return exponentIndex != -1 ? input[exponentStartingIndex..] : null;
         }
     }
 }
