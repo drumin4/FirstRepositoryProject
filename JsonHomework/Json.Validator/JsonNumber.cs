@@ -25,10 +25,10 @@ namespace Json
         {
             if (integralPartOfInput[0] == '-' || integralPartOfInput[0] == '+')
             {
-                return ContainsValidDigits(integralPartOfInput[1..], true) && PlacementOfZeroIsValid(integralPartOfInput[1..]);
+                return ContainsValidDigits(integralPartOfInput[1..]) && PlacementOfZeroIsValid(integralPartOfInput[1..]);
             }
 
-            return ContainsValidDigits(integralPartOfInput, true) && PlacementOfZeroIsValid(integralPartOfInput);
+            return ContainsValidDigits(integralPartOfInput) && PlacementOfZeroIsValid(integralPartOfInput);
         }
 
         private static bool FractionalPartIsValid(string fractionalPartOfInput)
@@ -43,7 +43,7 @@ namespace Json
                 return false;
             }
 
-            return ContainsValidDigits(fractionalPartOfInput[1..], false);
+            return ContainsValidDigits(fractionalPartOfInput[1..]);
         }
 
         private static bool ExponentialPartIsValid(string exponentialPartOfInput)
@@ -62,13 +62,14 @@ namespace Json
             {
                 const int startingIndexDigits = 2;
 
-                return ContainsValidDigits(exponentialPartOfInput[startingIndexDigits..], true) && PlacementOfZeroIsValid(exponentialPartOfInput[startingIndexDigits..]);
+                return ContainsValidDigits(exponentialPartOfInput[startingIndexDigits..])
+                    && PlacementOfZeroIsValid(exponentialPartOfInput[startingIndexDigits..]);
             }
 
-            return ContainsValidDigits(exponentialPartOfInput[1..], true) && PlacementOfZeroIsValid(exponentialPartOfInput[1..]);
+            return ContainsValidDigits(exponentialPartOfInput[1..]) && PlacementOfZeroIsValid(exponentialPartOfInput[1..]);
         }
 
-        private static bool ContainsValidDigits(string input, bool integralOrExponential)
+        private static bool ContainsValidDigits(string input)
         {
             foreach (char c in input)
             {
