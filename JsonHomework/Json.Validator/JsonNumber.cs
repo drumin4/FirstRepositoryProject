@@ -23,6 +23,11 @@ namespace Json
 
         private static bool IntegralPartIsValid(string integralPartOfInput)
         {
+            if (integralPartOfInput[0] == '-' || integralPartOfInput[0] == '+')
+            {
+                return ContainsValidDigits(integralPartOfInput[1..], true) && PlacementOfZeroIsValid(integralPartOfInput[1..]);
+            }
+
             return ContainsValidDigits(integralPartOfInput, true) && PlacementOfZeroIsValid(integralPartOfInput);
         }
 
@@ -33,12 +38,12 @@ namespace Json
                 return true;
             }
 
-            if (fractionalPartOfInput == "")
+            if (fractionalPartOfInput.Length == 1)
             {
                 return false;
             }
 
-            return ContainsValidDigits(fractionalPartOfInput, false);
+            return ContainsValidDigits(fractionalPartOfInput[1..], false);
         }
 
         private static bool ExponentialPartIsValid(string exponentialPartOfInput)
@@ -48,23 +53,25 @@ namespace Json
                 return true;
             }
 
-            if (exponentialPartOfInput == "" || exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
+            if (exponentialPartOfInput.Length == 1 || exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
             {
                 return false;
             }
 
-            return ContainsValidDigits(exponentialPartOfInput, true) && PlacementOfZeroIsValid(exponentialPartOfInput);
+            if (exponentialPartOfInput[1] == '-' || exponentialPartOfInput[1] == '+')
+            {
+                const int startingIndexDigits = 2;
+
+                return ContainsValidDigits(exponentialPartOfInput[startingIndexDigits..], true) && PlacementOfZeroIsValid(exponentialPartOfInput[startingIndexDigits..]);
+            }
+
+            return ContainsValidDigits(exponentialPartOfInput[1..], true) && PlacementOfZeroIsValid(exponentialPartOfInput[1..]);
         }
 
         private static bool ContainsValidDigits(string input, bool integralOrExponential)
         {
             foreach (char c in input)
             {
-                if (integralOrExponential && input.IndexOf(c) == 0 && (c == '-' || c == '+'))
-                {
-                    continue;
-                }
-
                 if (c < '0' || c > '9')
                 {
                     return false;
@@ -101,21 +108,17 @@ namespace Json
                 return null;
             }
 
-            int fractionStartingIndex = dotIndex + 1;
-
             if (exponentIndex != -1)
             {
-                return input[fractionStartingIndex..exponentIndex];
+                return input[dotIndex..exponentIndex];
             }
 
-            return input[fractionStartingIndex..];
+            return input[dotIndex..];
         }
 
         private static string ExtractExponent(string input, int exponentIndex)
         {
-            int exponentStartingIndex = exponentIndex + 1;
-
-            return exponentIndex != -1 ? input[exponentStartingIndex..] : null;
+            return exponentIndex != -1 ? input[exponentIndex..] : null;
         }
     }
 }
