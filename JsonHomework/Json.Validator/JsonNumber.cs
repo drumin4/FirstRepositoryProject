@@ -23,7 +23,7 @@ namespace Json
 
         private static bool IntegralPartIsValid(string integralPartOfInput)
         {
-            if (integralPartOfInput[0] == '-' || integralPartOfInput[0] == '+')
+            if (integralPartOfInput[0] == '-')
             {
                 return ContainsValidDigits(integralPartOfInput[1..]) && PlacementOfZeroIsValid(integralPartOfInput[1..]);
             }
