@@ -50,9 +50,14 @@ namespace Json
                 return true;
             }
 
-            if (exponentialPartOfInput.ToLower().Contains("e-") || exponentialPartOfInput.ToLower().Contains("e+"))
+            if (exponentialPartOfInput.Length == 1)
             {
-                if (exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
+                return false;
+            }
+
+            if (exponentialPartOfInput[1] == '-' || exponentialPartOfInput[1] == '+')
+            {
+                if (exponentialPartOfInput.Length == 2)
                 {
                     return false;
                 }
@@ -60,13 +65,12 @@ namespace Json
                 const int startingIndexDigits = 2;
                 exponentialPartOfInput = exponentialPartOfInput[startingIndexDigits..];
 
-                return ContainsValidDigits(exponentialPartOfInput)
-                    && PlacementOfZeroIsValid(exponentialPartOfInput);
+                return ContainsValidDigits(exponentialPartOfInput);
             }
 
             exponentialPartOfInput = exponentialPartOfInput[1..];
 
-            return ContainsValidDigits(exponentialPartOfInput) && PlacementOfZeroIsValid(exponentialPartOfInput);
+            return ContainsValidDigits(exponentialPartOfInput);
         }
 
         private static bool ContainsValidDigits(string input)
@@ -84,8 +88,7 @@ namespace Json
 
         private static bool PlacementOfZeroIsValid(string input)
         {
-           return (!input.StartsWith("0") && !input.StartsWith("-0") && !input.StartsWith("+0"))
-                   || input.EndsWith("0");
+           return !input.StartsWith("0") || input.EndsWith("0");
         }
 
         private static string ExtractInteger(string input, int dotIndex, int exponentIndex)
