@@ -25,7 +25,9 @@ namespace Json
         {
             if (integralPartOfInput[0] == '-')
             {
-                return ContainsValidDigits(integralPartOfInput[1..]) && PlacementOfZeroIsValid(integralPartOfInput[1..]);
+                integralPartOfInput = integralPartOfInput[1..];
+
+                return ContainsValidDigits(integralPartOfInput) && PlacementOfZeroIsValid(integralPartOfInput);
             }
 
             return ContainsValidDigits(integralPartOfInput) && PlacementOfZeroIsValid(integralPartOfInput);
@@ -33,14 +35,9 @@ namespace Json
 
         private static bool FractionalPartIsValid(string fractionalPartOfInput)
         {
-            if (fractionalPartOfInput == null)
+            if (fractionalPartOfInput == "")
             {
                 return true;
-            }
-
-            if (fractionalPartOfInput.Length == 1)
-            {
-                return false;
             }
 
             return ContainsValidDigits(fractionalPartOfInput[1..]);
@@ -48,25 +45,28 @@ namespace Json
 
         private static bool ExponentialPartIsValid(string exponentialPartOfInput)
         {
-            if (exponentialPartOfInput == null)
+            if (exponentialPartOfInput == "")
             {
                 return true;
             }
 
-            if (exponentialPartOfInput.Length == 1 || exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
+            if (exponentialPartOfInput.ToLower().Contains("e-") || exponentialPartOfInput.ToLower().Contains("e+"))
             {
-                return false;
-            }
+                if (exponentialPartOfInput.EndsWith('+') || exponentialPartOfInput.EndsWith('-'))
+                {
+                    return false;
+                }
 
-            if (exponentialPartOfInput[1] == '-' || exponentialPartOfInput[1] == '+')
-            {
                 const int startingIndexDigits = 2;
+                exponentialPartOfInput = exponentialPartOfInput[startingIndexDigits..];
 
-                return ContainsValidDigits(exponentialPartOfInput[startingIndexDigits..])
-                    && PlacementOfZeroIsValid(exponentialPartOfInput[startingIndexDigits..]);
+                return ContainsValidDigits(exponentialPartOfInput)
+                    && PlacementOfZeroIsValid(exponentialPartOfInput);
             }
 
-            return ContainsValidDigits(exponentialPartOfInput[1..]) && PlacementOfZeroIsValid(exponentialPartOfInput[1..]);
+            exponentialPartOfInput = exponentialPartOfInput[1..];
+
+            return ContainsValidDigits(exponentialPartOfInput) && PlacementOfZeroIsValid(exponentialPartOfInput);
         }
 
         private static bool ContainsValidDigits(string input)
@@ -79,7 +79,7 @@ namespace Json
                 }
             }
 
-            return true;
+            return input.Length > 0;
         }
 
         private static bool PlacementOfZeroIsValid(string input)
@@ -106,7 +106,7 @@ namespace Json
         {
             if (dotIndex == -1)
             {
-                return null;
+                return "";
             }
 
             if (exponentIndex != -1)
@@ -119,7 +119,7 @@ namespace Json
 
         private static string ExtractExponent(string input, int exponentIndex)
         {
-            return exponentIndex != -1 ? input[exponentIndex..] : null;
+            return exponentIndex != -1 ? input[exponentIndex..] : "";
         }
     }
 }
