@@ -33,12 +33,7 @@ namespace Json
 
         private static bool FractionalPartIsValid(string fractionalPartOfInput)
         {
-            if (fractionalPartOfInput == "")
-            {
-                return true;
-            }
-
-            return ContainsValidDigits(fractionalPartOfInput[1..]);
+            return fractionalPartOfInput == "" || ContainsValidDigits(fractionalPartOfInput[1..]);
         }
 
         private static bool ExponentialPartIsValid(string exponentialPartOfInput)
