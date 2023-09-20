@@ -26,8 +26,6 @@ namespace Json
             if (integralPartOfInput[0] == '-')
             {
                 integralPartOfInput = integralPartOfInput[1..];
-
-                return ContainsValidDigits(integralPartOfInput) && PlacementOfZeroIsValid(integralPartOfInput);
             }
 
             return ContainsValidDigits(integralPartOfInput) && PlacementOfZeroIsValid(integralPartOfInput);
@@ -64,11 +62,11 @@ namespace Json
 
                 const int startingIndexDigits = 2;
                 exponentialPartOfInput = exponentialPartOfInput[startingIndexDigits..];
-
-                return ContainsValidDigits(exponentialPartOfInput);
             }
-
-            exponentialPartOfInput = exponentialPartOfInput[1..];
+            else
+            {
+                exponentialPartOfInput = exponentialPartOfInput[1..];
+            }
 
             return ContainsValidDigits(exponentialPartOfInput);
         }
