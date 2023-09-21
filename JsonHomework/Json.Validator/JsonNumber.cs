@@ -43,22 +43,9 @@ namespace Json
                 return true;
             }
 
-            if (exponentialPartOfInput.Length == 1)
-            {
-                return false;
-            }
+            exponentialPartOfInput = exponentialPartOfInput[1..];
 
-            if (exponentialPartOfInput[1] == '-' || exponentialPartOfInput[1] == '+')
-            {
-                if (exponentialPartOfInput.Length == 2)
-                {
-                    return false;
-                }
-
-                const int startingIndexDigits = 2;
-                exponentialPartOfInput = exponentialPartOfInput[startingIndexDigits..];
-            }
-            else
+            if (exponentialPartOfInput.StartsWith('-') || exponentialPartOfInput.StartsWith('+'))
             {
                 exponentialPartOfInput = exponentialPartOfInput[1..];
             }
