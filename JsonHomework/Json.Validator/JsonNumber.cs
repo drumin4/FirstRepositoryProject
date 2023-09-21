@@ -68,7 +68,7 @@ namespace Json
 
         private static bool PlacementOfZeroIsValid(string input)
         {
-           return !input.StartsWith("0") || input.EndsWith("0");
+           return !input.StartsWith("0") || input.LastIndexOf('0') == 0 && input.EndsWith('0');
         }
 
         private static string ExtractInteger(string input, int dotIndex, int exponentIndex)

@@ -49,6 +49,12 @@ namespace Json.Facts
         }
 
         [Fact()]
+        public void DoesNotStartWithMultipleConsecutiveZeros()
+        {
+            Assert.False(IsJsonNumber("00"));
+        }
+
+        [Fact()]
         public void CanBeNegative()
         {
             Assert.True(IsJsonNumber("-26"));
