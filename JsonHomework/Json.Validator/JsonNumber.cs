@@ -75,11 +75,12 @@ namespace Json
         {
             if (dotIndex != -1)
             {
-                return input[0..dotIndex];
+                return input[..dotIndex];
             }
-            else if (exponentIndex != -1)
+
+            if (exponentIndex != -1)
             {
-                return input[0..exponentIndex];
+                return input[..exponentIndex];
             }
 
             return input;
