@@ -49,9 +49,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ranking.cs" />
     <Compile Include="Team.cs" />
     <Compile Include="TeamFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RankingFacts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
