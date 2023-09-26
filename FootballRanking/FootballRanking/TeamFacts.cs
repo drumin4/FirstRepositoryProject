@@ -4,7 +4,7 @@ using System;
 namespace FootballRanking
 {
     [TestClass]
-    public class UnitTest1
+    public class TeamFacts
     {
         [TestMethod]
         public void TestMethod1()
